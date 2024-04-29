@@ -1,32 +1,40 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, ValidationError } from '@nestjs/common';
+import { User } from 'src/schemas/user';
 import { UsersService } from 'src/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
     constructor (private usersService: UsersService) {}
     @Get()
-    getAllUser(): string {
+    getAllUser(): Promise<User[]> {
         return this.usersService.getAllUsers();
     }
 
     @Get(":id")
-    getUserId(@Param('id') id: string): string {
+    getUserId(@Param('id') id: string):  Promise<User> {
         return this.usersService.getUserById(id);
     }
     @Post()
-    sendUser(): string {
-        return this.usersService.addUser();
+    async sendUser(@Body() data ):  Promise<User> {
+        try{
+            const rVal = (await this.usersService.addUser( data )) as User;
+            return rVal;
+        }catch(err){
+            const error:ValidationError = err;
+            console.log("ОШИБКА");
+            console.log(err.message);
+        }
     }
     @Put(":id")
-    updateUserById(@Param('id') id: string ): string {
-        return this.usersService.updateById(id);
+    updateUserById(@Param('id') id: string,@Body() data:User ): Promise<User> {
+        return this.usersService.updateById(id, data);
     }
     @Delete()
-    deleteAll(): string {
+    deleteAll(): Promise<{deletedCount:number }> {
         return this.usersService.deleteAllUser();
     }
     @Delete(":id")
-    deleteUserById(@Param('id') id: string): string {
+    deleteUserById(@Param('id') id: string): Promise<User> {
         return this.usersService.deleteById(id);
     }
 

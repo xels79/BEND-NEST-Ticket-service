@@ -4,8 +4,10 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 
+//'mongodb://localhost/nest'
+//mongodb://main:02389main@188.225.84.135:27017/?authMechanism=DEFAULT&authSource=nest
 @Module({
-  imports: [UsersModule, MongooseModule.forRoot('mongodb://localhost/nest')],
+  imports: [UsersModule, MongooseModule.forRoot('mongodb://main:02389main@188.225.84.135:27017/nest?authMechanism=DEFAULT&authSource=nest')],
   controllers: [AppController],
   providers: [AppService],
 })

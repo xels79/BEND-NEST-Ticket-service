@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Query } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user';
 
 @Injectable()
@@ -18,13 +18,13 @@ export class UsersService {
         const userData = new this.userModel(data);
         return userData.save();
     }
-    deleteAllUser(): string {
-        return "UService delete all";
+    deleteAllUser():  Promise<{deletedCount:number }> {
+        return this.userModel.deleteMany();
     }
     deleteById( id:string ): Promise<User> {
         return this.userModel.findByIdAndDelete(id);
     }
-    updateById(id:string ): Promise<User> {
-        return this.userModel.findByIdAndUpdate(id);
+    updateById(id:string, data:User ): Promise<User> {
+        return this.userModel.findByIdAndUpdate(id, data);
     }
 }

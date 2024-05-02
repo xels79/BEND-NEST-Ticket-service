@@ -27,4 +27,13 @@ export class UsersService {
     updateById(id:string, data:User ): Promise<User> {
         return this.userModel.findByIdAndUpdate(id, data);
     }
+    async checkAuthUser(username: string, psw: string): Promise<User[]> {
+        return this.userModel.find({username: username, pswd: psw});
+    }
+
+    async checkRegUser(username: string, email: string): Promise<User[]> {
+        console.log('checkRegUser:',username,email);
+        return this.userModel.find({ $or:[{username: username}, {email:email}]});
+    }
+
 }

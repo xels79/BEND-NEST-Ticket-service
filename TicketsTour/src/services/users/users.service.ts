@@ -33,7 +33,7 @@ export class UsersService {
 
     async checkRegUser(username: string, email: string): Promise<User[]> {
         console.log('checkRegUser:',username,email);
-        return this.userModel.find({ $or:[{username: username}, {email:email}]});
+        return (await this.userModel.find().or([{username: username}, {email:email}]));
     }
 
 }

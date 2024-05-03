@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, ValidationError } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, ValidationError } from '@nestjs/common';
+import { response } from 'express';
 import { UserDto } from 'src/dto/user-dto';
 import { IErrorMessage } from 'src/interfaces/IErrorMessage';
 import { User } from 'src/schemas/user';
@@ -24,9 +25,10 @@ export class UsersController {
             } else {
                 const errText = "Неправильный логин или пароль.";
                 console.log(errText);
-                return [
-                    {fieldName:'', message:errText},
-                ];
+                throw new HttpException(
+                    [{fieldName:'username', message:errText},{fieldName:'password', message:errText}],
+                    HttpStatus.BAD_REQUEST,
+                );
             }
         });
 
@@ -44,15 +46,24 @@ export class UsersController {
                     const error:ValidationError = err;
                     console.log(error);
                     console.log(err.message);
-                    return [{fieldName:'', message:err.message}];
+                    throw new HttpException(
+                        [{fieldName:'', message:err.message}],
+                        HttpStatus.INTERNAL_SERVER_ERROR
+                    );
                 }
             }else{
-                const fieldName = queryRes[0].email===data.email?'email':'username';
-                const errText = queryRes[0].email===data.email
-                                ?`Почта "${data.email}" уже используется.`
-                                :`Пользователь с таким именем уже существует!`;
-                console.log(errText);
-                return [{isError:true, fieldName:fieldName, message:errText}];
+                const rVal:IErrorMessage[] = []
+                if (queryRes[0].username === data.username){
+                    rVal.push({fieldName:'username', message:'Пользователь с таким именем уже существует!'});
+                }
+                if (queryRes[0].email == data.email){
+                    rVal.push({fieldName:'email', message:`Почта "${data.email}" уже используется.`});
+                }
+                console.log(rVal);
+                throw new HttpException(
+                    rVal,
+                    HttpStatus.CONFLICT,
+                );
             }
         })
     }

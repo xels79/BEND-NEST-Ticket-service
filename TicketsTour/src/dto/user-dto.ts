@@ -5,18 +5,18 @@ export class UserDto implements IUser {
     cardNumber: string;
     username: string;
     email: string;
-    id: string;
+    _id: string;
     constructor({
         pswd,
         cardNumber="",
         username,
         email,
-        id
+        _id
     }){
         this.pswd = pswd;
         this.cardNumber = cardNumber;
         this.username = username;
         this.email = email;
-        this.id = id;
+        this._id = _id;
     }
 }

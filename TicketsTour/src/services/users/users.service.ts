@@ -34,8 +34,8 @@ export class UsersService {
         return this.userModel.findByIdAndUpdate(id, data);
     }
     async login(data:UserDto):Promise<{ access_token: string }>{
-        const payload = {username: data.username, pswd: data.pswd};
-        return { access_token: this.jwtService.sign( payload ) };
+        const payload = { userId: data._id, username: data.username };
+        return { access_token: this.jwtService.sign( payload) };
         //return await this.userModel.findOne({username: data.username, pswd: data.pswd})
     }
     async checkAuthUser(username: string, psw: string): Promise<User[] | null> {

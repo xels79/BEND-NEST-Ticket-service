@@ -1,17 +1,21 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseGuards, ValidationError } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Request, UseGuards, ValidationError } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { response } from 'express';
 import { UserDto } from 'src/dto/user-dto';
 import { IErrorMessage } from 'src/interfaces/IErrorMessage';
 import { IUser } from 'src/interfaces/user';
 import { User } from 'src/schemas/user';
+import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
 import { UsersService } from 'src/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
     constructor (private usersService: UsersService) {}
+    //
     @Get()
-    getAllUser(): Promise<User[]> {
+    @UseGuards(JwtAuthGuard)
+    getAllUser(@Request() req): Promise<User[]> {
+        console.log(req);
         return this.usersService.getAllUsers();
     }
 
@@ -25,6 +29,8 @@ export class UsersController {
     authUser(@Body() data: IUser, @Param('username') username): Promise<{ access_token: string }> {
         return this.usersService.login(new UserDto( data ));
     }
+    
+
     @Post()
     sendUser(@Body() _data: IUser ):  Promise<User | IErrorMessage[]> {
         const data = new UserDto( _data );

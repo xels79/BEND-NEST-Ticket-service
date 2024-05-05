@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, ValidationError } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, UseGuards, ValidationError } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { response } from 'express';
 import { UserDto } from 'src/dto/user-dto';
 import { IErrorMessage } from 'src/interfaces/IErrorMessage';
+import { IUser } from 'src/interfaces/user';
 import { User } from 'src/schemas/user';
 import { UsersService } from 'src/services/users/users.service';
 
@@ -17,24 +19,15 @@ export class UsersController {
     getUserId(@Param('id') id: string):  Promise<User> {
         return this.usersService.getUserById(id);
     }
-    @Post(":username")
-    authUser(@Body() data: UserDto, @Param('username') username): Promise<User | IErrorMessage[]>  {
-        return this.usersService.checkAuthUser(username, data.pswd).then((queryRes) => {
-            if (queryRes.length !== 0) {
-                return queryRes[0];
-            } else {
-                const errText = "Неправильный логин или пароль.";
-                console.log(errText);
-                throw new HttpException(
-                    [{fieldName:'username', message:errText},{fieldName:'password', message:errText}],
-                    HttpStatus.BAD_REQUEST,
-                );
-            }
-        });
 
+    @UseGuards(AuthGuard('local'))
+    @Post(":username")
+    authUser(@Body() data: IUser, @Param('username') username): Promise<{ access_token: string }> {
+        return this.usersService.login(new UserDto( data ));
     }
     @Post()
-    sendUser(@Body() data: UserDto ):  Promise<User | IErrorMessage[]> {
+    sendUser(@Body() _data: IUser ):  Promise<User | IErrorMessage[]> {
+        const data = new UserDto( _data );
         console.log(data);
         return this.usersService.checkRegUser(data.username, data.email).then(async (queryRes)=>{
             console.log('data reg:',queryRes);

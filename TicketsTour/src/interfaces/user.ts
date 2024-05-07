@@ -3,5 +3,5 @@ export interface IUser {
     cardNumber: string,
     username: string,
     email: string,
-    _id: string   //-- добавить
+   // _id: string   //-- добавить
 }

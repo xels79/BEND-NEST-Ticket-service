@@ -28,13 +28,6 @@ export class AuthService extends PassportStrategy(Strategy) {
             );
         }
         console.log('AuthService', 'ok');
-        // if (user?.password !== pass) {
-        //   throw new UnauthorizedException();
-        // }
-        // const payload = { sub: user.userId, username: user.username };
-        // return {
-        //   access_token: await this.jwtService.signAsync(payload),
-        // };
         return true;
       }
 }

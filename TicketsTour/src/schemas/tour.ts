@@ -23,4 +23,4 @@ export class Tour implements ITour {
     @Prop() date: string
 }
 
-export const TourSchema = SchemaFactory.createForClass(Tour);
+export const ToursSchema = SchemaFactory.createForClass(Tour);

@@ -12,11 +12,9 @@ import { UsersService } from 'src/services/users/users.service';
 export class UsersController {
     constructor (private usersService: UsersService) {}
     //
-    @Get()
     @UseGuards(JwtAuthGuard)
-    getAllUser(@Headers() headers: Record < string, string >, @Request() req): Promise<User[]> {
-        //console.log(req);
-        console.log(headers);
+    @Get()
+    getAllUser(@Request() req): Promise<User[]> {
         return this.usersService.getAllUsers();
     }
 
@@ -31,7 +29,7 @@ export class UsersController {
         return this.usersService.login(new UserDto( data ));
     }
     
-
+    //@UseGuards(JwtAuthGuard)
     @Post()
     sendUser(@Body() _data: IUser ):  Promise<User | IErrorMessage[]> {
         const data = new UserDto( _data );

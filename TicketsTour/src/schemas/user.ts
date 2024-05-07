@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { IUser } from 'src/interfaces/user';
+import { hashSync, genSaltSync } from 'bcrypt';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -9,7 +10,7 @@ export class User implements IUser{
     @Prop({required:true})
     username: string;
 
-    @Prop({required:true, maxlength:8})
+    @Prop({required:true, minlength:8})
     pswd: string;
 
     @Prop({required:true})
@@ -18,8 +19,16 @@ export class User implements IUser{
     @Prop()
     cardNumber: string;
 
-    @Prop()
-    _id: string;
+  //  @Prop()
+  //  _id: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.pre('save',function(next,data){
+    if (this.isNew){
+        console.log('Hashing password\n');
+        this.pswd = hashSync(this.pswd, genSaltSync());
+    }
+    next();
+});

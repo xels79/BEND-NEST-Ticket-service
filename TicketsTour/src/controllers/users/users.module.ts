@@ -8,25 +8,23 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/static/private/constants';
 import { JwtStrategyService } from 'src/services/Authentication/jwt-strategy/jwt-strategy.service';
-import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
+//import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
 
 @Module({
     imports: [
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
         PassportModule,
         JwtModule.register({
-            secret:jwtConstants.secret,
+            secret:'123456789',//jwtConstants.secret,
             signOptions: { expiresIn: '1h' }
         })
     ],
-    controllers: [
-        UsersController
-    ],
+    controllers: [UsersController],
     providers: [
         UsersService,   
         AuthService,
-        JwtStrategyService,
-        JwtAuthGuard
+        JwtStrategyService
+        // JwtAuthGuard
     ],
     exports:[AuthService]
 })

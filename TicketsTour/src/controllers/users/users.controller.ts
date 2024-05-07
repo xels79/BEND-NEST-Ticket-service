@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Request, UseGuards, ValidationError } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put,Request, Headers, UseGuards, ValidationError } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { response } from 'express';
 import { UserDto } from 'src/dto/user-dto';
@@ -14,8 +14,9 @@ export class UsersController {
     //
     @Get()
     @UseGuards(JwtAuthGuard)
-    getAllUser(@Request() req): Promise<User[]> {
-        console.log(req);
+    getAllUser(@Headers() headers: Record < string, string >, @Request() req): Promise<User[]> {
+        //console.log(req);
+        console.log(headers);
         return this.usersService.getAllUsers();
     }
 

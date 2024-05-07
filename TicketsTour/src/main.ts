@@ -6,9 +6,10 @@ async function bootstrap() {
   app.enableCors({
     origin: ['http://localhost:4200'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: '*',
+    allowedHeaders: 'Postman-Token, Host, User-Agen,Accept,Accept-Encoding,Bearer',
     credentials: true,
   });
+  
   await app.listen(3000);
 }
 bootstrap(); 

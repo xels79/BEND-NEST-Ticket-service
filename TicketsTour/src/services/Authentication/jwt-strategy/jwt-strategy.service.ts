@@ -11,7 +11,7 @@ export class JwtStrategyService extends PassportStrategy(Strategy) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: jwtConstants.secret,
+            secretOrKey: '123456789'//jwtConstants.secret,
             
         });
     }
@@ -20,6 +20,6 @@ export class JwtStrategyService extends PassportStrategy(Strategy) {
         //return { password: payload.pswd, username: payload.username };
         console.log("validate:");
         console.log('payload:\n',payload);
-        return { userId: payload.sub, username: payload.username };
+        return { _id: payload.sub, username: payload.username };
     }
 }

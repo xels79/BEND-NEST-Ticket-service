@@ -1,7 +1,11 @@
 export interface IUser {
-    pswd: string,
+    pswd?: string,
     cardNumber: string,
     username: string,
     email: string,
    // _id: string   //-- добавить
+}
+export interface ILSUser{
+    access_token: string,
+    user: IUser
 }

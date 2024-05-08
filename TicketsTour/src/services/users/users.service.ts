@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
-import { UserDto } from 'src/dto/user-dto';
+import { LSUserDto, UserDto } from 'src/dto/user-dto';
 import { User, UserDocument } from 'src/schemas/user';
 import { compare } from 'bcrypt';
+import { ILSUser, IUser } from 'src/interfaces/user';
 
 @Injectable()
 export class UsersService {
@@ -37,10 +38,10 @@ export class UsersService {
     updateById(id:string, data:User ): Promise<User> {
         return this.userModel.findByIdAndUpdate(id, data);
     }
-    async login(data:UserDto):Promise<{ access_token: string }>{
-        const payload = { username: data.username, sub: data.email };
-        return { access_token: this.jwtService.sign( payload ) };
-        //return await this.userModel.findOne({username: data.username, pswd: data.pswd})
+    async login(data:IUser):Promise<ILSUser>{
+        const _user = await this.userModel.findOne({username:data.username});
+        const payload = { username: _user.username, sub: _user.email };
+        return { access_token: this.jwtService.sign( payload ), user: new LSUserDto(_user) };
     }
     async checkAuthUser(username: string, psw: string): Promise<User | null> {
         const user = await this.userModel.findOne({username: username});

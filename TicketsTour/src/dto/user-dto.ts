@@ -1,22 +1,20 @@
 import { IUser } from "src/interfaces/user";
 
-export class UserDto implements IUser {
-    pswd: string;
+export class LSUserDto implements IUser{
     cardNumber: string;
     username: string;
     email: string;
-    //_id: string;
-    constructor({
-        pswd,
-        cardNumber="",
-        username,
-        email
-       // _id
-    }:IUser){
-        this.pswd = pswd;
-        this.cardNumber = cardNumber;
-        this.username = username;
-        this.email = email;
- //       this._id = _id;
+    constructor(data:IUser){
+        this.cardNumber = data.cardNumber ? data.cardNumber : "";
+        this.username = data.username;
+        this.email = data.email;
+    }
+}
+
+export class UserDto extends LSUserDto {
+    pswd: string;
+    constructor(data:IUser){
+        super( data );
+        this.pswd = data.pswd;
     }
 }

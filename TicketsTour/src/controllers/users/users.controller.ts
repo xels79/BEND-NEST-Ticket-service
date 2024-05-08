@@ -1,15 +1,19 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put,Request, Headers, UseGuards, ValidationError } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { response } from 'express';
-import { UserDto } from 'src/dto/user-dto';
+import { BehaviorSubject } from 'rxjs';
+import { LSUserDto, UserDto } from 'src/dto/user-dto';
 import { IErrorMessage } from 'src/interfaces/IErrorMessage';
-import { IUser } from 'src/interfaces/user';
+import { ILSUser, IUser } from 'src/interfaces/user';
 import { User } from 'src/schemas/user';
 import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
 import { UsersService } from 'src/services/users/users.service';
 
 @Controller('users')
 export class UsersController {
+
+    private userSubject = new BehaviorSubject<LSUserDto | null>(null);
+    readonly $userSubject = this.userSubject.asObservable();
+
     constructor (private usersService: UsersService) {}
     //
     @UseGuards(JwtAuthGuard)
@@ -25,21 +29,22 @@ export class UsersController {
 
     @UseGuards(AuthGuard('local'))
     @Post(":username")
-    authUser(@Body() data: IUser, @Param('username') username): Promise<{ access_token: string }> {
-        return this.usersService.login(new UserDto( data ));
+    authUser(@Body() data: IUser, @Param('username') username): Promise<ILSUser> {
+        return this.usersService.login( data );
     }
     
     //@UseGuards(JwtAuthGuard)
     @Post()
-    sendUser(@Body() _data: IUser ):  Promise<User | IErrorMessage[]> {
+    sendUser(@Body() _data: IUser ):  Promise<ILSUser | IErrorMessage[]> {
         const data = new UserDto( _data );
         console.log(data);
         return this.usersService.checkRegUser(data.username, data.email).then(async (queryRes)=>{
             console.log('data reg:',queryRes);
             if (!queryRes.length){
                 try{
-                    const rVal = (await this.usersService.addUser( data )) as User;
-                    return rVal;
+
+                    this.userSubject.next( new LSUserDto((await this.usersService.addUser( data )) as IUser ));
+                    return this.usersService.login( (await this.usersService.addUser( data )) as IUser );
                 }catch(err){
                     const error:ValidationError = err;
                     console.log(error);

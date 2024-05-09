@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import {ITour} from "../interfaces/Tour";
+import { ToursDto } from 'src/dto/tours-dto';
 
 export type TourDocument = HydratedDocument<Tour>;
 
@@ -24,3 +25,13 @@ export class Tour implements ITour {
 }
 
 export const ToursSchema = SchemaFactory.createForClass(Tour);
+
+ToursSchema.post('find',function(docs){
+    console.log(docs);
+    if (Array.isArray(docs)){
+        for(let i=0; i<docs.length;i++){
+            docs[i] = new ToursDto(docs[i]);
+        }
+    }
+    console.log(docs);
+});

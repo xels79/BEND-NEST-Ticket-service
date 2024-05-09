@@ -6,14 +6,25 @@ import { LSUserDto, UserDto } from 'src/dto/user-dto';
 import { User, UserDocument } from 'src/schemas/user';
 import { compare } from 'bcrypt';
 import { ILSUser, IUser } from 'src/interfaces/user';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class UsersService {
+    private user:LSUserDto = null;
+    private userSubject = new BehaviorSubject<LSUserDto | null>(null);
+    readonly $userSubject = this.userSubject.asObservable();
+
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
-        private jwtService: JwtService
+        private jwtService: JwtService,
     ){
+        this.userSubject.subscribe( (user)=>{
+            this.user = user;
+        } )
         console.log('UserService start up.');
+    }
+    setUser(user: IUser):void {
+        this.userSubject.next(new LSUserDto( user ));
     }
     getAllUsers(): Promise<User[]> {
         return this.userModel.find();
@@ -38,10 +49,10 @@ export class UsersService {
     updateById(id:string, data:User ): Promise<User> {
         return this.userModel.findByIdAndUpdate(id, data);
     }
-    async login(data:IUser):Promise<ILSUser>{
-        const _user = await this.userModel.findOne({username:data.username});
-        const payload = { username: _user.username, sub: _user.email };
-        return { access_token: this.jwtService.sign( payload ), user: new LSUserDto(_user) };
+    async login():Promise<ILSUser>{
+        //const _user = await this.userModel.findOne({username:data.username});
+        const payload = { username: this.user.username, sub: this.user.email };
+        return { access_token: this.jwtService.sign( payload ), user: this.user };
     }
     async checkAuthUser(username: string, psw: string): Promise<User | null> {
         const user = await this.userModel.findOne({username: username});

@@ -11,10 +11,7 @@ import { UsersService } from 'src/services/users/users.service';
 @Controller('users')
 export class UsersController {
 
-    private userSubject = new BehaviorSubject<LSUserDto | null>(null);
-    readonly $userSubject = this.userSubject.asObservable();
-
-    constructor (private usersService: UsersService) {}
+    constructor (private usersService: UsersService) { }
     //
     @UseGuards(JwtAuthGuard)
     @Get()
@@ -30,10 +27,9 @@ export class UsersController {
     @UseGuards(AuthGuard('local'))
     @Post(":username")
     authUser(@Body() data: IUser, @Param('username') username): Promise<ILSUser> {
-        return this.usersService.login( data );
+        return this.usersService.login();
     }
     
-    //@UseGuards(JwtAuthGuard)
     @Post()
     sendUser(@Body() _data: IUser ):  Promise<ILSUser | IErrorMessage[]> {
         const data = new UserDto( _data );
@@ -43,8 +39,8 @@ export class UsersController {
             if (!queryRes.length){
                 try{
 
-                    this.userSubject.next( new LSUserDto((await this.usersService.addUser( data )) as IUser ));
-                    return this.usersService.login( (await this.usersService.addUser( data )) as IUser );
+                    this.usersService.setUser( (await this.usersService.addUser( data )) as IUser );
+                    return this.usersService.login( );
                 }catch(err){
                     const error:ValidationError = err;
                     console.log(error);

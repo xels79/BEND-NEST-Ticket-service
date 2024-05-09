@@ -1,7 +1,6 @@
 import { Strategy } from 'passport-local';
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/users.service';
-import { JwtService } from '@nestjs/jwt';
 import { PassportStrategy } from '@nestjs/passport';
 
 
@@ -9,7 +8,6 @@ import { PassportStrategy } from '@nestjs/passport';
 export class AuthService extends PassportStrategy(Strategy) {
     constructor(
         private usersService: UsersService,
-        // private jwtService: JwtService
       ) {
         super({ usernameField:"username", passwordField: 'pswd'});
       }
@@ -22,10 +20,13 @@ export class AuthService extends PassportStrategy(Strategy) {
         console.log('AuthService', `"${username}"`, `"${pswd}"`);
         if (!user) {
             const errText = "Неправильный логин или пароль.";
+            this.usersService.setUser( null );
             throw new HttpException(
                 [{fieldName:'username', message:errText},{fieldName:'password', message:errText}],
                 HttpStatus.UNAUTHORIZED,
             );
+        }else{
+          this.usersService.setUser(user);
         }
         console.log('AuthService', 'ok');
         return true;

@@ -17,5 +17,6 @@ export class ToursDto implements ITour{
         this.img = data.img?data.img:"";
         this.type = data.type?data.type:"";
         this.date = data.date?data.date:"";
+        this.id = data.id;
     }
 }

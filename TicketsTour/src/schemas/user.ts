@@ -10,6 +10,9 @@ export class User implements IUser{
     @Prop({required:true})
     username: string;
 
+    @Prop({required:true})
+    realname: string;
+    
     @Prop({required:true, minlength:8})
     pswd: string;
 

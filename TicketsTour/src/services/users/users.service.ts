@@ -53,6 +53,7 @@ export class UsersService {
         //const _user = await this.userModel.findOne({username:data.username});
         const payload = { username: this.user.username, sub: this.user.email };
         return { access_token: this.jwtService.sign( payload ), user: this.user };
+        //const payload = { username: this.user.username, sub: new UserDto( this.user ) };
     }
     async checkAuthUser(username: string, psw: string): Promise<User | null> {
         const user = await this.userModel.findOne({username: username});

@@ -5,12 +5,16 @@ export class LSUserDto implements IUser{
     username: string;
     realname: string;
     email: string;
+    _id: string | undefined;
     constructor(data:IUser){
         if (data){
             this.cardNumber = data.cardNumber ? data.cardNumber : "";
             this.username = data.username.trim();
             this.email = data.email;
             this.realname = data.realname.trim();
+            if (data._id){
+                this._id = data._id;
+            }
         }
     }
 }

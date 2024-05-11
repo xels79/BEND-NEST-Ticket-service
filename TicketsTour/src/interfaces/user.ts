@@ -4,7 +4,7 @@ export interface IUser {
     username: string,
     realname: string,
     email: string,
-   // _id: string   //-- добавить
+    _id?: string   //-- добавить
 }
 export interface ILSUser{
     access_token: string,

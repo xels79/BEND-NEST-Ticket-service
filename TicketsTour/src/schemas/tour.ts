@@ -27,11 +27,11 @@ export class Tour implements ITour {
 export const ToursSchema = SchemaFactory.createForClass(Tour);
 
 ToursSchema.post('find',function(docs){
-    console.log(docs);
+    //console.log(docs);
     if (Array.isArray(docs)){
         for(let i=0; i<docs.length;i++){
             docs[i] = new ToursDto(docs[i]);
         }
     }
-    console.log(docs);
+    //console.log(docs);
 });

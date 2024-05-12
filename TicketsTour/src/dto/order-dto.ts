@@ -7,6 +7,7 @@ export class OrderDto implements IOrder{
     tourId: string;
     userId: string;
     constructor( data:IOrder ){
+        console.log('OrderDto:',data);
         this.age = data.age;
         this.birthDay = data.birthDay;
         this.cardNumber = data.cardNumber;

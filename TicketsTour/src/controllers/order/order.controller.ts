@@ -1,4 +1,5 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Observable } from 'rxjs';
 import { OrderDto } from 'src/dto/order-dto';
 import { IOrder } from 'src/interfaces/order';
 import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
@@ -13,5 +14,12 @@ export class OrderController {
     initTours(@Body() data: IOrder) {
         const orderData = new OrderDto( data );
         this.orderService.sendOrder( orderData );
+    }
+    @UseGuards(JwtAuthGuard)
+    @Get(':userId')
+    async getOrdersByUser(@Param('userId') userId: string): Promise<any> {
+        let rv = this.orderService.getOrdersByUser(userId);
+        console.log('Order:\n',rv);
+        return rv
     }
 }

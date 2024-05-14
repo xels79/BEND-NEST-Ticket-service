@@ -5,6 +5,7 @@ import { ToursDto } from 'src/dto/tours-dto';
 import { Tour, TourDocument } from 'src/schemas/tour';
 import { DeleteResult } from 'mongodb';
 import { faker } from '@faker-js/faker/locale/ru';
+import { ITourClient } from 'src/interfaces/Tour';
 
 const imgNames = [
     "ocean.jpg",
@@ -31,7 +32,7 @@ export class ToursService {
                 description: faker.lorem.paragraph(),
                 tourOperator: faker.company.name(),
                 price: "" + Math.round(Math.random() * (3000 - 300) + 300),
-                img: imgNames[Math.floor(Math.random() * 10)],
+                img: '/assets/img/'+imgNames[Math.floor(Math.random() * 10)],
                 type: 'test-type ' + i,
                 date: 'test-data ' + i,
                 id: 'id-' + i
@@ -59,5 +60,12 @@ export class ToursService {
     deleteAll(): Promise<DeleteResult>{
         return this.tourModel.deleteMany();
     }
-
+    async uploadTour( body: ITourClient ): Promise<ToursDto> {
+        const tDTO = new ToursDto( body );
+        const tourData = new this.tourModel( tDTO );
+        tourData.save();
+        tourData.id = 'auto-' + tourData._id;
+        tourData.updateOne();
+        return new ToursDto( tourData );
+    }
 }

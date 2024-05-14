@@ -1,10 +1,13 @@
-export interface ITour {
+export interface ITourClient {
     name:string,
     description:string,
     tourOperator:string,
     price:string,
     img:string,
-    id:string,
-    type: string,
-    date: string
+}
+
+export interface ITour extends ITourClient{
+    id?:string,
+    type?: string,
+    date?: string
 }

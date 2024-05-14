@@ -1,4 +1,4 @@
-import { ITour } from "src/interfaces/Tour";
+import { ITour, ITourClient } from "src/interfaces/Tour";
 
 export class ToursDto implements ITour{
     name:string;

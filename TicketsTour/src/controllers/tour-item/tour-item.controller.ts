@@ -1,6 +1,7 @@
-import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { ToursDto } from 'src/dto/tours-dto';
 import { ITourClient } from 'src/interfaces/Tour';
 import { ToursService } from 'src/services/tours/tours.service';
 
@@ -25,5 +26,11 @@ export class TourItemController {
     async createTour(@Body() body: ITourClient){
         body.img = '/public/' + TourItemController.imgName;
         return this.toursService.uploadTour( body );
+    }
+
+    @Get(':name')
+    async getToursByName(@Param('name') name: string): Promise<ToursDto[]> {
+        console.log(`Ищем "${name}"`)
+        return this.toursService.getToursByName( name );
     }
 }

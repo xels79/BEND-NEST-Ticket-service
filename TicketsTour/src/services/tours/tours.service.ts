@@ -68,4 +68,8 @@ export class ToursService {
         tourData.updateOne();
         return new ToursDto( tourData );
     }
+
+    async getToursByName(name: string): Promise<ToursDto[]> {
+        return this.tourModel.find<ToursDto>({name: {'$regex':name, '$options':"i"}});
+    }
 }

@@ -10,7 +10,7 @@ export class LSUserDto implements IUser{
         if (data){
             this.cardNumber = data.cardNumber ? data.cardNumber : "";
             this.username = data.username.trim();
-            this.email = data.email;
+            this.email = data.email; 
             this.realname = data.realname.trim();
             if (data._id){
                 this._id = data._id;

@@ -46,7 +46,7 @@ export class UsersController {
                     throw new HttpException(
                         [{fieldName:'', message:err.message}],
                         HttpStatus.INTERNAL_SERVER_ERROR
-                    );
+                    ); 
                 }
             }else{
                 const rVal:IErrorMessage[] = []

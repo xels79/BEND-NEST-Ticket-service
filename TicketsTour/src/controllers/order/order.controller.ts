@@ -30,6 +30,6 @@ export class OrderController {
     async getOrdersByUser(@Param('userId') userId: string): Promise<any> {
         let rv = this.orderService.getOrdersByUser(userId);
         console.log('Order:\n',rv);
-        return rv
+        return rv ;
     }
 }

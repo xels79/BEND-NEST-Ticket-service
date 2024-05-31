@@ -28,4 +28,4 @@ import { JwtStrategyService } from 'src/services/Authentication/jwt-strategy/jwt
     ],
     exports:[AuthService]
 })
-export class UsersModule { }
+export class UsersModule { } 

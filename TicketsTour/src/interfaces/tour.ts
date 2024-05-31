@@ -9,5 +9,5 @@ export interface ITourClient {
 export interface ITour extends ITourClient{
     id?:string,
     type?: string,
-    date?: string
+    date?: string 
 }

@@ -56,7 +56,7 @@ export class UsersService {
         if (!user){
             return null;
         }
-        if (!await compare(psw, user.pswd)){
+        if (!await compare(psw, user.pswd)){ 
             return null;
         }
         return user;

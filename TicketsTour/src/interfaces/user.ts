@@ -7,6 +7,6 @@ export interface IUser {
     _id?: string   //-- добавить
 }
 export interface ILSUser{
-    access_token: string,
+    access_token: string, 
     user: IUser
 }

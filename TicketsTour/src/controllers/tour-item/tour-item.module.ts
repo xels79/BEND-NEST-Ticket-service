@@ -18,4 +18,4 @@ import { Tour, ToursSchema } from 'src/schemas/tour';
     controllers: [TourItemController],
     providers:[ToursService]
 })
-export class TourItemModule {}
+export class TourItemModule {} 

@@ -1,5 +1,5 @@
 export interface IErrorMessage{
   fieldName:string,
-  message:string,
+  message:string, 
   isError?:boolean
 }

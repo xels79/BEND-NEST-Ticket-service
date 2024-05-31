@@ -24,7 +24,7 @@ export class UserDto extends LSUserDto {
     constructor(data:IUser){
         super( data );
         if (data){
-            this.pswd = data.pswd;
+            this.pswd = data.pswd; 
         }
     }
 }

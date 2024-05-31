@@ -11,7 +11,7 @@ export class OrderDto implements IOrder{
         this.age = data.age;
         this.birthDay = data.birthDay;
         this.cardNumber = data.cardNumber;
-        this.tourId = data.tourId;
+        this.tourId = data.tourId; 
         this.userId = data.userId;
     }
 }

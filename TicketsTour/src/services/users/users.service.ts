@@ -57,7 +57,7 @@ export class UsersService {
     }
     async login():Promise<ILSUser>{
         const payload = { username: this.user.username, sub: this.user.email };
-        return { access_token: this.jwtService.sign( payload ), user: new SendingUserDTO(this.user) };
+        return { access_token: this.jwtService.sign( payload ), user: new LSUserDto(this.user) };
     }
     async checkAuthUser(username: string, psw: string): Promise<User | null> {
         const user = await this.userModel.findOne({username: username});

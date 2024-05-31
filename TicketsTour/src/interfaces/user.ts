@@ -1,4 +1,4 @@
-import { SendingUserDTO } from "src/dto/user-dto"
+import { LSUserDto } from "src/dto/user-dto"
 
 export interface IUser {
     pswd?: string,
@@ -10,5 +10,5 @@ export interface IUser {
 }
 export interface ILSUser{
     access_token: string, 
-    user: SendingUserDTO
+    user: LSUserDto
 }

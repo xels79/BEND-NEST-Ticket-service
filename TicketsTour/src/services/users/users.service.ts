@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
-import { LSUserDto, UserDto } from 'src/dto/user-dto';
+import { LSUserDto, SendingUserDTO, UserDto } from 'src/dto/user-dto';
 import { User, UserDocument } from 'src/schemas/user';
 import { compare } from 'bcrypt';
 import { ILSUser, IUser } from 'src/interfaces/user';
@@ -32,6 +32,15 @@ export class UsersService {
     getUserById(id:string): Promise<User> {
         return this.userModel.findById(id); 
     }
+    async getUserByUsername(username:string): Promise<UserDto> {
+        const user:IUser = await this.userModel.findOne({ username:username });
+        if (user){
+            return new UserDto(user);
+        }else{
+            return null
+        }
+        // return this.userModel.findOne({ username:username }); 
+    }
     async addUser(data:UserDto): Promise<User> {
         const userData = new this.userModel(data);
         console.log(data);
@@ -47,9 +56,8 @@ export class UsersService {
         return this.userModel.findByIdAndUpdate(id, data);
     }
     async login():Promise<ILSUser>{
-        //const _user = await this.userModel.findOne({username:data.username});
         const payload = { username: this.user.username, sub: this.user.email };
-        return { access_token: this.jwtService.sign( payload ), user: this.user };
+        return { access_token: this.jwtService.sign( payload ), user: new SendingUserDTO(this.user) };
     }
     async checkAuthUser(username: string, psw: string): Promise<User | null> {
         const user = await this.userModel.findOne({username: username});

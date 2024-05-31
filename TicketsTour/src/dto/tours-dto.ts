@@ -1,5 +1,7 @@
 import { ITour, ITourClient } from "src/interfaces/Tour";
+export class ToursAnswerDto{
 
+}
 export class ToursDto implements ITour{
     name:string;
     description:string;

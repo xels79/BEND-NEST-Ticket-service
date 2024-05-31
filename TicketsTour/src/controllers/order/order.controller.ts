@@ -1,13 +1,17 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { OrderDto } from 'src/dto/order-dto';
+import { MixedData, OrderDto } from 'src/dto/order-dto';
 import { IOrder } from 'src/interfaces/order';
 import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
 import { OrderService } from 'src/services/order/order.service';
+import { UsersService } from 'src/services/users/users.service';
 
 @Controller('order')
 export class OrderController {
-    constructor(private orderService: OrderService) { }
+    constructor(
+        private orderService: OrderService,
+        private usersService: UsersService
+    ) { }
 
     @UseGuards(JwtAuthGuard)
     @Post()
@@ -26,10 +30,15 @@ export class OrderController {
         
     }
     @UseGuards(JwtAuthGuard)
-    @Get(':userId')
-    async getOrdersByUser(@Param('userId') userId: string): Promise<any> {
-        let rv = this.orderService.getOrdersByUser(userId);
-        console.log('Order:\n',rv);
-        return rv ;
+    @Get(':username')
+    async getOrdersByUser(@Param('username') username: string): Promise<MixedData[]> {
+        const user = (await this.usersService.getUserByUsername(username));
+        if (user){
+            let rv = this.orderService.getOrdersByUser(user._id);
+            console.log('Order:\n',rv);
+            return rv
+        }
+        console.error("Пользователь не найден", user);
+        throw new HttpException("Пользователь не найден",HttpStatus.NOT_FOUND);
     }
 }

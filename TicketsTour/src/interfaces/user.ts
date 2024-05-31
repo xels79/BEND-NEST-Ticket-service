@@ -1,3 +1,5 @@
+import { SendingUserDTO } from "src/dto/user-dto"
+
 export interface IUser {
     pswd?: string,
     cardNumber: string,
@@ -8,5 +10,5 @@ export interface IUser {
 }
 export interface ILSUser{
     access_token: string, 
-    user: IUser
+    user: SendingUserDTO
 }

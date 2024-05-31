@@ -21,7 +21,7 @@ export class UsersService {
         this.userSubject.subscribe( (user)=>{
             this.user = user;
         } )
-        console.log('UserService start up.');
+        console.log('UserService start up.'); 
     }
     setUser(user: IUser):void {
         this.userSubject.next(new LSUserDto( user ));

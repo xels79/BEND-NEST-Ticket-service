@@ -39,7 +39,7 @@ export class UsersController {
             if (!queryRes.length){
                 try{
                     return this.usersService.login( );
-                }catch(err){
+                }catch(err){ 
                     const error:ValidationError = err;
                     console.log(error);
                     console.log(err.message);

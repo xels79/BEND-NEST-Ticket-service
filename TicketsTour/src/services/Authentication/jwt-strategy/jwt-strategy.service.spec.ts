@@ -13,6 +13,6 @@ describe('JwtStrategyService', () => {
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(service).toBeDefined(); 
   });
 });

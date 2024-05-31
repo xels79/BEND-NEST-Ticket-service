@@ -22,4 +22,4 @@ import { jwtConstants } from 'src/static/private/constants';
     JwtStrategyService
   ]
 }) 
-export class ToursModule {}
+export class ToursModule {} 

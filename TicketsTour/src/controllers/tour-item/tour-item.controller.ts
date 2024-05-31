@@ -31,6 +31,6 @@ export class TourItemController {
     @Get(':name')
     async getToursByName(@Param('name') name: string): Promise<ToursDto[]> {
         console.log(`Ищем "${name}"`)
-        return this.toursService.getToursByName( name );
+        return this.toursService.getToursByName( name ); 
     }
 }

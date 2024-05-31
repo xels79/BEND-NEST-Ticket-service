@@ -55,7 +55,7 @@ export class UsersController {
                 if (queryRes[0].username === data.username){
                     rVal.push({fieldName:'username', message:'Пользователь с таким именем уже существует!'});
                 }
-                if (queryRes[0].email == data.email){
+                if (queryRes[0].email == data.email){ 
                     rVal.push({fieldName:'email', message:`Почта "${data.email}" уже используется.`});
                 }
                 console.log(rVal);

@@ -26,7 +26,7 @@ export class AuthService extends PassportStrategy(Strategy) {
                 HttpStatus.UNAUTHORIZED,
             );
         }else{
-          this.usersService.setUser(user);
+          this.usersService.setUser(user); 
         }
         console.log('AuthService', 'ok');
         return true;

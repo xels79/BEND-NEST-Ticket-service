@@ -13,6 +13,6 @@ describe('TourItemController', () => {
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(controller).toBeDefined(); 
   });
 });

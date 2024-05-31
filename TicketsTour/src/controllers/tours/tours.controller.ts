@@ -30,6 +30,6 @@ export class ToursController {
     @Delete()
     removeAllTours( @Param('remove') remove): any {
         console.log( 'remove' );
-        return this.toursService.deleteAll();
+        return this.toursService.deleteAll(); 
     }
 }

@@ -22,4 +22,4 @@ import { Tour, ToursSchema } from 'src/schemas/tour';
   controllers: [OrderController],
   providers: [OrderService, ToursService, JwtStrategyService]
 })
-export class OrderModule {}
+export class OrderModule {} 

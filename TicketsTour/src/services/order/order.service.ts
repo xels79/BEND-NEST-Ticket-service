@@ -29,7 +29,7 @@ export class OrderService {
             return <MixedData>{...item , ... tour}; 
         })
         return Promise.all(dt2).then(data=>{
-            //console.log('getOrdersByUser\n',data);
+            //console.log('getOrdersByUser\n',data); 
             return data;
         })
     }

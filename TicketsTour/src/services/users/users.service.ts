@@ -49,7 +49,7 @@ export class UsersService {
     updateById(id:string, data:User ): Promise<User> {
         return this.userModel.findByIdAndUpdate(id, data);
     }
-    async login():Promise<ILSUser>{
+    async login():Promise<ILSUser>{ 
         //const _user = await this.userModel.findOne({username:data.username});
         const payload = { username: this.user.username, sub: this.user.email };
         return { access_token: this.jwtService.sign( payload ), user: this.user };

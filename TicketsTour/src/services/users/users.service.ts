@@ -11,20 +11,12 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class UsersService {
     private user:LSUserDto = null;
-    private userSubject = new BehaviorSubject<LSUserDto | null>(null);
-    readonly $userSubject = this.userSubject.asObservable();
 
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         private jwtService: JwtService,
     ){
-        this.userSubject.subscribe( (user)=>{
-            this.user = user;
-        } )
         console.log('UserService start up.');
-    }
-    setUser(user: IUser):void {
-        this.userSubject.next(new LSUserDto( user ));
     }
     getAllUsers(): Promise<User[]> {
         return this.userModel.find();
@@ -36,9 +28,6 @@ export class UsersService {
         const userData = new this.userModel(data);
         console.log(data);
         return userData.save();
-        // const payload = { username: data.username, sub: data.email };
-        // return { access_token: this.jwtService.sign( payload ) };
-
     }
     deleteAllUser():  Promise<{deletedCount:number }> {
         return this.userModel.deleteMany();
@@ -50,10 +39,8 @@ export class UsersService {
         return this.userModel.findByIdAndUpdate(id, data);
     }
     async login():Promise<ILSUser>{
-        //const _user = await this.userModel.findOne({username:data.username});
         const payload = { username: this.user.username, sub: this.user.email };
         return { access_token: this.jwtService.sign( payload ), user: this.user };
-        //const payload = { username: this.user.username, sub: new UserDto( this.user ) };
     }
     async checkAuthUser(username: string, psw: string): Promise<User | null> {
         const user = await this.userModel.findOne({username: username});

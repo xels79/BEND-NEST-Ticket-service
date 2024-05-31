@@ -20,13 +20,11 @@ export class AuthService extends PassportStrategy(Strategy) {
         console.log('AuthService', `"${username}"`, `"${pswd}"`);
         if (!user) {
             const errText = "Неправильный логин или пароль.";
-            this.usersService.setUser( null );
             throw new HttpException(
                 [{fieldName:'username', message:errText},{fieldName:'password', message:errText}],
                 HttpStatus.UNAUTHORIZED,
             );
         }else{
-          this.usersService.setUser(user);
         }
         console.log('AuthService', 'ok');
         return true;

@@ -38,8 +38,6 @@ export class UsersController {
             console.log('data reg:',queryRes);
             if (!queryRes.length){
                 try{
-
-                    this.usersService.setUser( (await this.usersService.addUser( data )) as IUser );
                     return this.usersService.login( );
                 }catch(err){
                     const error:ValidationError = err;

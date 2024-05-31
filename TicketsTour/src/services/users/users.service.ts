@@ -11,12 +11,20 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class UsersService {
     private user:LSUserDto = null;
+    private userSubject = new BehaviorSubject<LSUserDto | null>(null);
+    readonly $userSubject = this.userSubject.asObservable();
 
     constructor(
         @InjectModel(User.name) private userModel: Model<UserDocument>,
         private jwtService: JwtService,
     ){
-        console.log('UserService start up.');
+        this.userSubject.subscribe( (user)=>{
+            this.user = user;
+        } )
+        console.log('UserService start up.'); 
+    }
+    setUser(user: IUser):void {
+        this.userSubject.next(new LSUserDto( user ));
     }
     getAllUsers(): Promise<User[]> {
         return this.userModel.find();

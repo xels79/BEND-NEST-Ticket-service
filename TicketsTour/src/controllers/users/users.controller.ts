@@ -1,8 +1,9 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put,Request, Headers, UseGuards, ValidationError } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BehaviorSubject } from 'rxjs';
-import { LSUserDto, UserDto } from 'src/dto/user-dto';
+import { LSUserDto, UserDto, UserUpdateDto } from 'src/dto/user-dto';
 import { IErrorMessage } from 'src/interfaces/IErrorMessage';
+import { IUserUpdate } from 'src/interfaces/IUserUpdate';
 import { ILSUser, IUser } from 'src/interfaces/user';
 import { User } from 'src/schemas/user';
 import { JwtAuthGuard } from 'src/services/Authentication/jwt-auth.guard/jwt-auth.guard';
@@ -19,6 +20,7 @@ export class UsersController {
         return this.usersService.getAllUsers();
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(":id")
     getUserId(@Param('id') id: string):  Promise<User> {
         return this.usersService.getUserById(id);
@@ -30,6 +32,17 @@ export class UsersController {
         return this.usersService.login();
     }
     
+    // @UseGuards(JwtAuthGuard)
+    // @Put(":username")
+    // async updateUser(@Body() data: IPasswordChange, @Param('username') username:string): Promise<ILSUser> {
+    //     const user = ( await this.usersService.checkAuthUser( username, data.oldPassword ));
+    //     if (user){
+
+    //     }else{
+    //         throw new HttpException("Пользователь не найден", HttpStatus.NOT_FOUND);
+    //     }
+    // }
+
     @Post()
     sendUser(@Body() _data: IUser ):  Promise<ILSUser | IErrorMessage[]> {
         const data = new UserDto( _data );
@@ -64,14 +77,34 @@ export class UsersController {
             }
         })
     }
+
+    @UseGuards(JwtAuthGuard)
     @Put(":id")
-    updateUserById(@Param('id') id: string,@Body() data:User ): Promise<User> {
-        return this.usersService.updateById(id, data);
+    async updateUserById(@Param('id') id: string,@Body() data:IUserUpdate ): Promise<User> {
+        const userTmp = ( await this.usersService.getUserById(id));
+        if (userTmp){
+            const uDto = new UserUpdateDto(data);
+            if (uDto.newPassword && uDto.oldPassword){
+                if ( ( await this.usersService.checkAuthUser( userTmp.username, data.oldPassword )) ){
+                    return this.usersService.updateById(id, uDto.getUserDto());
+                }else{
+                    throw new HttpException("Старый пароль указан неверно", HttpStatus.BAD_REQUEST);
+                }
+            }else{
+                return this.usersService.updateById(id, uDto.getUserDto());
+            }
+        }else{
+            throw new HttpException("Пользователь не найден", HttpStatus.NOT_FOUND);
+        }
     }
+
+    @UseGuards(JwtAuthGuard)
     @Delete()
     deleteAll(): Promise<{deletedCount:number }> {
         return this.usersService.deleteAllUser();
     }
+
+    @UseGuards(JwtAuthGuard)
     @Delete(":id")
     deleteUserById(@Param('id') id: string): Promise<User> {
         return this.usersService.deleteById(id);

@@ -1,4 +1,6 @@
+import { IUserUpdate } from "src/interfaces/IUserUpdate";
 import { IUser } from "src/interfaces/user";
+import { hashSync, genSaltSync } from 'bcrypt';
 export class SendingUserDTO{
     cardNumber: string;
     username: string;
@@ -32,5 +34,28 @@ export class UserDto extends LSUserDto {
         if (data){
             this.pswd = data.pswd; 
         }
+    }
+}
+export class UserUpdateDto extends UserDto implements IUserUpdate{
+    oldPassword:string;
+    newPassword:string;
+    userId:string;
+
+    constructor(data:IUserUpdate){
+        super( data );
+        if (data){
+            this.oldPassword = data?.oldPassword;
+            this.newPassword = data?.newPassword;
+            this.userId = data?.userId;
+        }
+    }
+    getUserDto():UserDto{
+        const nUser = new UserDto(new LSUserDto(this));
+        if (this.newPassword && this.oldPassword){
+            nUser.pswd = hashSync(this.newPassword, genSaltSync());
+        }else{
+            nUser.pswd = this.pswd;
+        }
+        return nUser;
     }
 }
